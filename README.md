@@ -61,7 +61,7 @@ child 6 is:
         others are not shown because of consuming less space
 ```
 
-##Freezing parameters of some layers to prevent them from retraining
+## Freezing parameters of some layers to prevent them from retraining
 
 The following code print parameters for layers in a pretrained model.
 
@@ -135,7 +135,7 @@ child  8 was not frozen
 child  9 was not frozen
    ```
    
-  ##Getting some layers
+  ## Getting some layers
   
   In order to get some layers and remove the others, we can convert model.children() to a list and use indexing for specify which layers we wants. For this purpose in pytorch, it can be done as following:
 
