@@ -143,7 +143,7 @@ child  9 was not frozen
 new_model = nn.Sequential(*list(model.children())[:-1])
    ```
 
-The above line get all layers except the last layer (it remove the last layer in model).
+The above line gets all layers except the last layer (it removes the last layer in model).
 
    ```ruby
 new_model_2_removed = nn.Sequential(*list(model.children())[:-2])
