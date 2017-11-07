@@ -149,4 +149,4 @@ The above line get all layers except the last layer (it remove the last layer in
 new_model_2_removed = nn.Sequential(*list(model.children())[:-2])
    ```
 
-The above line remove the two last layers in resnet18 and get others.
+The above line removes the two last layers in resnet18 and get others.
