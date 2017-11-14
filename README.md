@@ -137,7 +137,7 @@ child  9 was not frozen
    
   ## Getting some layers
   
-  In order to get some layers and remove the others, we can convert model.children() to a list and use indexing for specify which layers we want. For this purpose in pytorch, it can be done as follow:
+  In order to get some layers and remove the others, we can convert model.children() to a list and use indexing for specifying which layers we want. For this purpose in pytorch, it can be done as follow:
 
    ```ruby
 new_model = nn.Sequential(*list(model.children())[:-1])
