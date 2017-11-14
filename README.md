@@ -150,3 +150,28 @@ new_model_2_removed = nn.Sequential(*list(model.children())[:-2])
    ```
 
 The above line removes the two last layers in resnet18 and get others.
+
+
+
+## Add new loss function 
+To add a new loss function it is necessary to define a class that inherits from torch.nn.Module class. After  declaring initializing function, you just need to add forward function in order to compute loss and return it. In the following it is shown.
+
+    
+    class cust_loss(torch.nn.Module):
+    def __init__(self):
+        super(cust_loss, self).__init__()
+
+    def forward(self, input, target):
+        predicted_labels = torch.max(input, 1)[1].float()
+        minus = predicted_labels - target.float()
+        self.cust_distance = torch.sum(minus*minus).type(torch.FloatTensor)/predicted_labels.size()[0]
+        return self.cust_distance
+
+It is necessary that all lines in forward function to return FloatTensor type in order to autograd can be computed in pytorch backward function. Finally you must use the declared loss function in your main function during training as follow.
+
+    ############ Withing main function ###########
+    criterion = cust_loss()   #nn.CrossEntropyLoss()        
+    Optimizer = optim.SGD(filter(lambda p: p.requires_grad, model_conv.parameters()), lr=1e-3, momentum=0.9)
+    ...
+    loss = criterion(inputs, labels)
+    loss.backward()
