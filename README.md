@@ -94,7 +94,7 @@ Several lines of output are shown as follow:
 -1.6319e-02 3.3193e-02 -2.2146e-04
 ```
 
-Now, I consider to freeze the parameters of the first layer to the sixth layer as follow:
+Now, I consider to freeze the parameters of the first to the sixth layers as follow:
 
 ```ruby
 child_counter = 0
