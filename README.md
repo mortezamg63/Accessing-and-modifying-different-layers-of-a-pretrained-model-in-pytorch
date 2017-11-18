@@ -185,3 +185,4 @@ This statment returns a tensor with the size of 2\*batch_size*size_of_data. The 
 
    	(iter(train_target_loader).next())[0]
  
+
