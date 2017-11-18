@@ -63,7 +63,7 @@ child 6 is:
 
 ## Freezing parameters of some layers to prevent them from retraining
 
-The following code print parameters for layers in a pretrained model.
+The following code prints parameters for layers in a pretrained model.
 
 ```ruby
 for child in model.children():
