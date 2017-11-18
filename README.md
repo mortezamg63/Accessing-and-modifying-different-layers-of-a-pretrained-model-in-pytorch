@@ -181,7 +181,7 @@ It is considered to get data from dataloader without loop statement. There is a 
 
 	iter(train_target_loader).next()
 
-This statment returns a tensor with the size of 2*batch_size*size_of_data. The first column is loaded data and the second column is corresponding labels for loaded data. Therefore, if we use the following statement, It returns data. It returns labels in case we change index to 1.
+This statment returns a tensor with the size of 2\*batch_size*size_of_data. The first column is loaded data and the second column is corresponding labels for loaded data. Therefore, if we use the following statement, It returns data. It returns labels in case we change index to 1.
 
    	(iter(train_target_loader).next())[0]
  
