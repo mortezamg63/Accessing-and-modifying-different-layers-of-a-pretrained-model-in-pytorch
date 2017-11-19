@@ -159,7 +159,7 @@ The above line removes the two last layers in resnet18 and get others.
 ## Adding new loss function 
 To add a new loss function it is necessary to define a class that inherits from torch.nn.Module class. After  declaring initializing function, you just need to add forward function in order to compute loss and return it. In the following it is shown.
 
-    
+    '''ruby
     class cust_loss(torch.nn.Module):
     def __init__(self):
         super(cust_loss, self).__init__()
@@ -169,24 +169,31 @@ To add a new loss function it is necessary to define a class that inherits from 
         minus = predicted_labels - target.float()
         self.cust_distance = torch.sum(minus*minus).type(torch.FloatTensor)/predicted_labels.size()[0]
         return self.cust_distance
+      '''
 
 It is necessary that all lines in forward function to return FloatTensor type in order to autograd can be computed in pytorch backward function. Finally you must use the declared loss function in your main function during training as follow.
 
+    '''ruby
     ############ Withing main function ###########
     criterion = cust_loss()   #nn.CrossEntropyLoss()        
     Optimizer = optim.SGD(filter(lambda p: p.requires_grad, model_conv.parameters()), lr=1e-3, momentum=0.9)
     ...
     loss = criterion(inputs, labels)
     loss.backward()
+    '''
 
 ## Getting data from dataloader
 It is considered to get data from dataloader without loop statement. There is a function that can do this for us. 
 
+	'''ruby
 	iter(train_target_loader).next()
+	'''
 
 This statment returns a tensor with the size of 2\*batch_size*size_of_data. The first column is loaded data and the second column is corresponding labels for loaded data. Therefore, if we use the following statement, It returns data. It returns labels in case we change index to 1.
 
-   	(iter(train_target_loader).next())[0]
+   	'''runy
+	(iter(train_target_loader).next())[0]
+	'''
  
 
 ## Manipulation a pretrained model
@@ -195,6 +202,7 @@ Sometimes it is needed to extract some features from different layers of a pretr
 
 Now consider the VGG16 architecture that is as follow (it is output of python)
 
+	'''ruby
 	VGG (
 	  (features): Sequential (
 	    (0): Conv2d(3, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
@@ -239,6 +247,7 @@ Now consider the VGG16 architecture that is as follow (it is output of python)
 	    (6): Linear (4096 -> 1000)
 	  )
 	)
+	'''
 
 To show you how to do this task, I use an example for illustration. Assume that I want to extract the first layers of VGG16 as features. In this regard, look at the following picture. The blue line shows which outputs I consider to get from layers.
 
@@ -248,6 +257,7 @@ As it can be seen from above picture and python output, our desire part of  vgg 
 
 Now implementing a class for this purpose is as follow:
 
+	'''ruby
 	class myModel(nn.Module):
 	    def __init__(self):
 		super(myModel,self).__init__()
@@ -285,5 +295,6 @@ Now implementing a class for this purpose is as follow:
 		out3 = self.upSample2(out3)
 		#out7_mp = F.max_pool2d(out7, 2, 2)
 		return out1, out2, out3
+	'''
 		
 I hope this piece of code can be helpful for you :-)
