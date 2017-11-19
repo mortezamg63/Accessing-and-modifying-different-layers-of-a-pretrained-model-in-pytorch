@@ -184,16 +184,15 @@ It is necessary that all lines in forward function to return FloatTensor type in
 ## Getting data from dataloader
 It is considered to get data from dataloader without loop statement. There is a function that can do this for us. 
 
-	'''ruby
-	iter(train_target_loader).next()
-	'''
+   ```ruby
+   iter(train_target_loader).next()
+   ```	
 
 This statment returns a tensor with the size of 2\*batch_size*size_of_data. The first column is loaded data and the second column is corresponding labels for loaded data. Therefore, if we use the following statement, It returns data. It returns labels in case we change index to 1.
 
-   	'''runy
-	(iter(train_target_loader).next())[0]
-	'''
- 
+   ```ruby
+   (iter(train_target_loader).next())[0]
+   ```	 
 
 ## Manipulation a pretrained model
 
