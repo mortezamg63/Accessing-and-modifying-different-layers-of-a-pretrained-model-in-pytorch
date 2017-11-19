@@ -118,13 +118,13 @@ for child in model.children():
          print('child ', children_of_child_counter, 'of child',child
          _counter,' was not frozen')
          children_of_child_counter += 1
-else:
-   print("child ",child_counter," was not frozen")
-   child_counter += 1
+   else:
+      print("child ",child_counter," was not frozen")
+      child_counter += 1
    ```
 The output of above code is as follow:   
    
-   ```
+   ```ruby
    child  0 was frozen
 child  1 was frozen
 child  2 was frozen
@@ -143,13 +143,13 @@ child  9 was not frozen
   In order to get some layers and remove the others, we can convert model.children() to a list and use indexing for specifying which layers we want. For this purpose in pytorch, it can be done as follow:
 
    ```ruby
-new_model = nn.Sequential(*list(model.children())[:-1])
+     new_model = nn.Sequential(*list(model.children())[:-1])
    ```
 
 The above line gets all layers except the last layer (it removes the last layer in model).
 
    ```ruby
-new_model_2_removed = nn.Sequential(*list(model.children())[:-2])
+   new_model_2_removed = nn.Sequential(*list(model.children())[:-2])
    ```
 
 The above line removes the two last layers in resnet18 and get others.
@@ -159,17 +159,17 @@ The above line removes the two last layers in resnet18 and get others.
 ## Adding new loss function 
 To add a new loss function it is necessary to define a class that inherits from torch.nn.Module class. After  declaring initializing function, you just need to add forward function in order to compute loss and return it. In the following it is shown.
 
-    '''ruby
-    class cust_loss(torch.nn.Module):
-    def __init__(self):
-        super(cust_loss, self).__init__()
+	 '''ruby
+	    class cust_loss(torch.nn.Module):
+	    def __init__(self):
+		super(cust_loss, self).__init__()
 
-    def forward(self, input, target):
-        predicted_labels = torch.max(input, 1)[1].float()
-        minus = predicted_labels - target.float()
-        self.cust_distance = torch.sum(minus*minus).type(torch.FloatTensor)/predicted_labels.size()[0]
-        return self.cust_distance
-      '''
+	    def forward(self, input, target):
+		predicted_labels = torch.max(input, 1)[1].float()
+		minus = predicted_labels - target.float()
+		self.cust_distance = torch.sum(minus*minus).type(torch.FloatTensor)/predicted_labels.size()[0]
+		return self.cust_distance
+	   '''
 
 It is necessary that all lines in forward function to return FloatTensor type in order to autograd can be computed in pytorch backward function. Finally you must use the declared loss function in your main function during training as follow.
 
