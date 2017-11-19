@@ -1,4 +1,4 @@
-# Notes in pytorch to deal with deep learning techniques
+# Notes in pytorch to deal with ConvNets
 
 
 ## Accessing and modifying different layers of a pretrained model in pytorch
