@@ -249,7 +249,7 @@ To show you how to do this task, I use an example for illustration. Assume that 
 
 ![vgg-short](https://user-images.githubusercontent.com/15813546/32988686-5119820c-cd1e-11e7-8213-7a21a3227863.png)
 
-As it can be seen from above picture and python output, our desire part of  vgg net is lines in the python output correspond with line from (0) to (15). Also, we need to concatenate output of lines (3), (8) and (15). The outputs of (8) and (15) must be upsample to reach the size of the output in line (8), then  they are concatenated. 
+As it can be seen from above picture and python output, our desire part of  vgg net is lines in the python output correspond with line from (0) to (15). Also, we need to concatenate output of lines (3), (8) and (15). The outputs of lines (8) and (15) must be enlarged (upsample) to obtain the size of the output in line (3); then they are concatenated to acheive the result. 
 
 Now implementing a class for this purpose is as follow:
    ```ruby
@@ -292,4 +292,4 @@ Now implementing a class for this purpose is as follow:
 		return out1, out2, out3
    ```
 		
-I hope this piece of code can be helpful for you :-)
+I hope this piece of code can be helpful :-)
