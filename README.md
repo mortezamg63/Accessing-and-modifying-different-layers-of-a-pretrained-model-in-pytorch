@@ -200,7 +200,6 @@ Sometimes it is needed to extract some features from different layers of a pretr
 
 Now consider the VGG16 architecture that is as follow (it is output of python)
 
-	'''ruby
 	VGG (
 	  (features): Sequential (
 	    (0): Conv2d(3, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
@@ -244,8 +243,7 @@ Now consider the VGG16 architecture that is as follow (it is output of python)
 	    (5): Dropout (p = 0.5)
 	    (6): Linear (4096 -> 1000)
 	  )
-	)
-	'''
+	)	
 
 To show you how to do this task, I use an example for illustration. Assume that I want to extract the first layers of VGG16 as features. In this regard, look at the following picture. The blue line shows which outputs I consider to get from layers.
 
@@ -254,9 +252,8 @@ To show you how to do this task, I use an example for illustration. Assume that 
 As it can be seen from above picture and python output, our desire part of  vgg net is lines in the python output correspond with line from (0) to (15). Also, we need to concatenate output of lines (3), (8) and (15). The outputs of (8) and (15) must be upsample to reach the size of the output in line (8), then  they are concatenated. 
 
 Now implementing a class for this purpose is as follow:
-
-	'''ruby
-	class myModel(nn.Module):
+   ```ruby
+   class myModel(nn.Module):
 	    def __init__(self):
 		super(myModel,self).__init__()
 		vgg_model = torchvision.models.vgg16(pretrained=True)
@@ -293,6 +290,6 @@ Now implementing a class for this purpose is as follow:
 		out3 = self.upSample2(out3)
 		#out7_mp = F.max_pool2d(out7, 2, 2)
 		return out1, out2, out3
-	'''
+   ```
 		
 I hope this piece of code can be helpful for you :-)
