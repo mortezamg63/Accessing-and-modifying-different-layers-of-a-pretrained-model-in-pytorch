@@ -156,7 +156,7 @@ The above line removes the two last layers in resnet18 and get others.
 
 
 
-## Add new loss function 
+## Adding new loss function 
 To add a new loss function it is necessary to define a class that inherits from torch.nn.Module class. After  declaring initializing function, you just need to add forward function in order to compute loss and return it. In the following it is shown.
 
     
@@ -179,7 +179,7 @@ It is necessary that all lines in forward function to return FloatTensor type in
     loss = criterion(inputs, labels)
     loss.backward()
 
-## Get data from dataloader
+## Getting data from dataloader
 It is considered to get data from dataloader without loop statement. There is a function that can do this for us. 
 
 	iter(train_target_loader).next()
