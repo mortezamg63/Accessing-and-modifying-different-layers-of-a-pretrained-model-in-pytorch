@@ -189,3 +189,55 @@ This statment returns a tensor with the size of 2\*batch_size*size_of_data. The 
    	(iter(train_target_loader).next())[0]
  
 
+## Manipulation a pretrained model
+
+Sometimes it is needed to extract some features from different layers of a pretrained model in a way that forward function can be run one time. In other words, running forward function in pretrained model and stopping it in a layer whose output is our interest is not a good method. Assume you wants to get output of several layers and you must run forward function several times (ie the number of runs is the number of layers whose output is our interest). To achieve this goal it is needed some background information.
+
+Now consider the VGG16 architecture that is as follow (it is the output of python)
+
+	VGG (
+	  (features): Sequential (
+	    (0): Conv2d(3, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+	    (1): ReLU (inplace)
+	    (2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+	    (3): ReLU (inplace)
+	    (4): MaxPool2d (size=(2, 2), stride=(2, 2), dilation=(1, 1))
+	    (5): Conv2d(64, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+	    (6): ReLU (inplace)
+	    (7): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+	    (8): ReLU (inplace)
+	    (9): MaxPool2d (size=(2, 2), stride=(2, 2), dilation=(1, 1))
+	    (10): Conv2d(128, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+	    (11): ReLU (inplace)
+	    (12): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+	    (13): ReLU (inplace)
+	    (14): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+	    (15): ReLU (inplace)
+	    (16): MaxPool2d (size=(2, 2), stride=(2, 2), dilation=(1, 1))
+	    (17): Conv2d(256, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+	    (18): ReLU (inplace)
+	    (19): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+	    (20): ReLU (inplace)
+	    (21): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+	    (22): ReLU (inplace)
+	    (23): MaxPool2d (size=(2, 2), stride=(2, 2), dilation=(1, 1))
+	    (24): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+	    (25): ReLU (inplace)
+	    (26): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+	    (27): ReLU (inplace)
+	    (28): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+	    (29): ReLU (inplace)
+	    (30): MaxPool2d (size=(2, 2), stride=(2, 2), dilation=(1, 1))
+	  )
+	  (classifier): Sequential (
+	    (0): Linear (25088 -> 4096)
+	    (1): ReLU (inplace)
+	    (2): Dropout (p = 0.5)
+	    (3): Linear (4096 -> 4096)
+	    (4): ReLU (inplace)
+	    (5): Dropout (p = 0.5)
+	    (6): Linear (4096 -> 1000)
+	  )
+	)
+
+To show you how to do this task, I use an example for illustration. Assume that I want to extract the first layers of VGG16 as features. In this regard, look at the following picture. The blue line shows which outputs I consider to get from layers.
