@@ -289,7 +289,8 @@ Now implementing a class for this purpose is as follow:
 		out2 = self.upSample1(out2)
 		out3 = self.upSample2(out3)
 		#out7_mp = F.max_pool2d(out7, 2, 2)
-		return out1, out2, out3
+		concat_features = torch.cat([out1, out2, out3], 1)
+		return out1, concat_features
    ```
 		
 I hope this piece of code can be helpful :-)
