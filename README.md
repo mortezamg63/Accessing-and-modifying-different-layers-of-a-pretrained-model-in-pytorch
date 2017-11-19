@@ -193,7 +193,7 @@ This statment returns a tensor with the size of 2\*batch_size*size_of_data. The 
 
 Sometimes it is needed to extract some features from different layers of a pretrained model in a way that forward function can be run one time. In other words, running forward function in pretrained model and stopping it in a layer whose output is our interest is not a good method. Assume you wants to get output of several layers and you must run forward function several times (ie the number of runs is the number of layers whose output is our interest). To achieve this goal it is needed some background information.
 
-Now consider the VGG16 architecture that is as follow (it is the output of python)
+Now consider the VGG16 architecture that is as follow (it is output of python)
 
 	VGG (
 	  (features): Sequential (
@@ -241,3 +241,49 @@ Now consider the VGG16 architecture that is as follow (it is the output of pytho
 	)
 
 To show you how to do this task, I use an example for illustration. Assume that I want to extract the first layers of VGG16 as features. In this regard, look at the following picture. The blue line shows which outputs I consider to get from layers.
+
+![vgg-short](https://user-images.githubusercontent.com/15813546/32988686-5119820c-cd1e-11e7-8213-7a21a3227863.png)
+
+As it can be seen from above picture and python output, our desire part of  vgg net is lines in the python output correspond with line from (0) to (15). Also, we need to concatenate output of lines (3), (8) and (15). The outputs of (8) and (15) must be upsample to reach the size of the output in line (8), then  they are concatenated. 
+
+Now implementing a class for this purpose is as follow:
+
+	class myModel(nn.Module):
+	    def __init__(self):
+		super(myModel,self).__init__()
+		vgg_model = torchvision.models.vgg16(pretrained=True)
+		for child in vgg_model.children():
+		    self.Conv1 = child[0]  # 3->64
+		    self.Conv2 = child[2]  # 64->64
+		    self.Conv3 = child[5]  # 64->128
+		    self.Conv4 = child[7]  # 128->128
+		    self.Conv5 = child[10]  # 128->256
+		    self.Conv6 = child[12]  # 256->256
+		    self.Conv7 = child[14]  # 256->256
+		    self.upSample1 = nn.Upsample(scale_factor=2)
+		    self.upSample2 = nn.Upsample(scale_factor=4)
+		    break
+	    def forward(self,x):
+		out1 = self.Conv1(x)
+		out1 = F.relu(out1)
+		out1 = self.Conv2(out1)
+		out1 = F.relu(out1)
+		out1_mp = F.max_pool2d(out1, 2, 2)
+		out2 = self.Conv3(out1_mp)
+		out2 = F.relu(out2)
+		out2 = self.Conv4(out2)
+		out2 = F.relu(out2)
+		out2_mp = F.max_pool2d(out2, 2, 2)
+		out3 = self.Conv5(out2_mp)
+		out3 = F.relu(out3)
+		out3 = self.Conv6(out3)
+		out3 = F.relu(out3)
+		out3 = self.Conv7(out3)
+		out3 = F.relu(out3)
+		###### up sampling to create output with the same size
+		out2 = self.upSample1(out2)
+		out3 = self.upSample2(out3)
+		#out7_mp = F.max_pool2d(out7, 2, 2)
+		return out1, out2, out3
+		
+I hope this piece of code can be helpful for you :-)
