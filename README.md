@@ -302,14 +302,14 @@ Also the above calss can be defined as follow:
 		vgg_model = torchvision.models.vgg16(pretrained=True)
 		for child in vgg_model.children():
 		    self.Conv1 = nn.Sequential(*list(vgg_model.features.children())[0:4])
-            	    self.Conv2 = nn.Sequential(*list(vgg_model.features.children())[4:9]) 
-                    self.Conv3 = nn.Sequential(*list(vgg_model.features.children())[9:16])
+               self.Conv2 = nn.Sequential(*list(vgg_model.features.children())[4:9]) 
+               self.Conv3 = nn.Sequential(*list(vgg_model.features.children())[9:16])
 		    self.upSample1 = nn.Upsample(scale_factor=2)
 		    self.upSample2 = nn.Upsample(scale_factor=4)
 		    break
 	    def forward(self,x):
 		out1 = self.Conv1(x)
-      		out2 = self.Conv2(out1)
+      	out2 = self.Conv2(out1)
         	out3 = self.Conv3(out2)
 		###### up sampling to create output with the same size
 		out2 = self.upSample1(out2)
