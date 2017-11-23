@@ -323,18 +323,15 @@ I hope this piece of code can be helpful :-)
 ## Adding custom transformation to dataloader
 When we want to do a kind of preprocessing that is not implemented in pytorch library, it is axiomatic that preprocessing must be done on loaded images similar to torchvision.Transforms. But there is no function to do what we want. In this regard, we must implement our function in order to do preprocessing in a way that pytorch is going. So, I want to show you implementing a custom trasformation. (Wow, it is an easy job :-). So easy that it can be unbelievable)
 
-At first, consider that our transformation is as easy as changing all pixel' values to zero. Assume that all images' pixels must be zero without considering a random choice. We want to put the function that do this task in code to be done as others torch transformations. For this purpose, a class is declared as follow, pay attention to inheritance from object class.
+At first, assume that our transformation is converting  BGR color space in loaded images to YUV color space. We want to implement a function that does this task similar to other torch transformations. For this purpose, a class is declared, pay attention to inheritance from object class, and a function whose name is __call__() is defined to convert color space as follow.
 
  ```ruby
+ import cv2  # using opencv library in code for changing color space
    class myCustomTransform(object):
     def __call__(self, img):        
-        new_img_data = []
-        for color in img.getdata():
-            new_img_data.append((0, 0, 0))
-
-        newimg = Image.new(img.mode, img.size)
-        newimg.putdata(new_img_data)
-        return newimg
+        image = np.array(img)
+        yuv_img = cv2.cvtColor(image,cv2.COLOR_BGR2YUV)
+	return  yuv_img
    ```
    After the definition of the class, we can use in source code with other torch transformations and change images to black images as follow.
 
@@ -342,7 +339,7 @@ At first, consider that our transformation is as easy as changing all pixel' val
    data_transforms = {
         'train': transforms.Compose([            
             transforms.CenterCrop(224),
-            myCustomTransform(),
+            myCustomTransform(),  #----------- using our custom transformation ------------> enjoy it ;-)
             transforms.ToTensor()
             #transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
         ]),
