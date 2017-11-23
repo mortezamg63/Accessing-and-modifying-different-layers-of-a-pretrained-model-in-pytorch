@@ -320,7 +320,7 @@ Also the above calss can be defined as follow:
 		
 I hope this piece of code can be helpful :-)
 
-## Adding custom transformation to dataloader
+## Adding custom transformation
 When we want to do a kind of preprocessing that is not implemented in pytorch library, it is axiomatic that preprocessing must be done on loaded images similar to torchvision.Transforms. But there is no function to do what we want. In this regard, we must implement our function in order to do preprocessing in a way that pytorch is going. So, I want to show you implementing a custom trasformation. (Wow, it is an easy job :-). So easy that it can be unbelievable)
 
 At first, assume that our transformation is converting  BGR color space in loaded images to YUV color space. We want to implement a function that does this task similar to other torch transformations. For this purpose, a class is declared, pay attention to inheritance from object class, and a function whose name is __call__ is defined to convert color space as follow.
