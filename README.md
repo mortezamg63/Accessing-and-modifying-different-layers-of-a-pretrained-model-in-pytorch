@@ -356,4 +356,4 @@ At first, assume that our transformation is converting  BGR color space in loade
     train_set = datasets.ImageFolder(os.path.join(train_data_dir, 'train'), data_transforms['train']) #train    
     val_set   = datasets.ImageFolder(os.path.join(val_data_dir, 'val'), data_transforms['val'])
    ```
-In the above code transforms.Normalize is commented because when you debug your code, zero values in training images which are loaded as a batch will be unchanged. If the normalization is done, the zero values in image's pixels changes.
+In the above code transforms.Normalize is commented because when you debug your code, zero values in training images which are loaded as a batch will be unchanged. If the normalization is done, the zero values in image's pixels change.
