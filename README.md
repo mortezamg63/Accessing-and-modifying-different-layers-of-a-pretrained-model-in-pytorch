@@ -319,3 +319,43 @@ Also the above calss can be defined as follow:
    ```
 		
 I hope this piece of code can be helpful :-)
+
+## Adding custom transformation to dataloader
+When we want to do a kind of preprocessing that is not implemented in pytorch library, it is axiomatic that preprocessing must be done on loaded images similar to torchvision.Transforms. But there is no function to do what we want. In this regard, we must implement our function in order to do preprocessing in a way that pytorch is going. So, I want to show you implementing a custom trasformation. (Wow, it is an easy job :-). So easy that it can be unbelievable)
+
+At first, consider that our transformation is as easy as changing all pixel' values to zero. Assume that all images' pixels must be zero without considering a random choice. We want to put the function that do this task in code to be done as others torch transformations. For this purpose, a class is declared as follow, pay attention to inheritance from object class.
+
+ ```ruby
+   class myCustomTransform(object):
+    def __call__(self, img):        
+        new_img_data = []
+        for color in img.getdata():
+            new_img_data.append((0, 0, 0))
+
+        newimg = Image.new(img.mode, img.size)
+        newimg.putdata(new_img_data)
+        return newimg
+   ```
+   After the definition of the class, we can use in source code with other torch transformations and change images to black images as follow.
+
+ ```ruby
+   data_transforms = {
+        'train': transforms.Compose([            
+            transforms.CenterCrop(224),
+            myCustomTransform(),
+            transforms.ToTensor()
+            #transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+        ]),
+        'val': transforms.Compose([
+            transforms.Scale(256),
+            transforms.CenterCrop(224),
+            transforms.ToTensor(),
+            transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+            ]),
+        }
+	
+    train_data_dir = 'xxxx/'
+    val_data_dir   = 'xxxx/'
+    train_set = datasets.ImageFolder(os.path.join(train_data_dir, 'train'), data_transforms['train']) #train    
+    val_set   = datasets.ImageFolder(os.path.join(val_data_dir, 'val'), data_transforms['val'])
+   ```
