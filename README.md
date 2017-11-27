@@ -330,7 +330,7 @@ There is not considerable difference with previous section. Here the other way o
 		vgg_model = torchvision.models.vgg16(pretrained=True)
         	isFeatureMap_section = True
         	for child in vgg_model.children():
-            	if isFeatureMap_section:
+            if isFeatureMap_section:
                 	self.Conv1 = nn.Sequential(*list(child)[0:4])
                 	self.Conv2 = nn.Sequential(*list(child)[4:9]) 
                 	self.Conv3 = nn.Sequential(*list(child)[9:16])
