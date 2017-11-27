@@ -299,14 +299,13 @@ Also the above calss can be defined as follow:
    class myModel(nn.Module):
 	    def __init__(self):
 		super(myModel,self).__init__()
-		vgg_model = torchvision.models.vgg16(pretrained=True)
-		for child in vgg_model.children():
-		    self.Conv1 = nn.Sequential(*list(vgg_model.features.children())[0:4])
-               self.Conv2 = nn.Sequential(*list(vgg_model.features.children())[4:9]) 
-               self.Conv3 = nn.Sequential(*list(vgg_model.features.children())[9:16])
-		    self.upSample1 = nn.Upsample(scale_factor=2)
-		    self.upSample2 = nn.Upsample(scale_factor=4)
-		    break
+		vgg_model = torchvision.models.vgg16(pretrained=True)		
+		 self.Conv1 = nn.Sequential(*list(vgg_model.features.children())[0:4])
+            self.Conv2 = nn.Sequential(*list(vgg_model.features.children())[4:9]) 
+            self.Conv3 = nn.Sequential(*list(vgg_model.features.children())[9:16])
+		 self.upSample1 = nn.Upsample(scale_factor=2)
+		 self.upSample2 = nn.Upsample(scale_factor=4)
+		    
 	    def forward(self,x):
 		out1 = self.Conv1(x)
       	out2 = self.Conv2(out1)
@@ -317,8 +316,45 @@ Also the above calss can be defined as follow:
 		concat_features = torch.cat([out1, out2, out3], 1)
 		return out1, concat_features
    ```
-		
+
 I hope this piece of code can be helpful :-)
+
+
+## Get different layers as whole
+There is not considerable difference with previous section. Here the other way of getting layers are shown.
+
+ ```ruby
+   class myModel(nn.Module):
+	    def __init__(self):
+		super(myModel,self).__init__()
+		vgg_model = torchvision.models.vgg16(pretrained=True)
+        	isFeatureMap_section = True
+        	for child in vgg_model.children():
+            	if isFeatureMap_section:
+                	self.Conv1 = nn.Sequential(*list(child)[0:4])
+                	self.Conv2 = nn.Sequential(*list(child)[4:9]) 
+                	self.Conv3 = nn.Sequential(*list(child)[9:16])
+                	self.Conv4 = nn.Sequential(*list(child)[16:30])                
+                	self.upSample1 = nn.Upsample(scale_factor=2)
+                	self.upSample2 = nn.Upsample(scale_factor=4)
+                	isFeatureMap_section = False
+            else:
+                self.L1 = nn.Sequential(*list(child)[0:7])
+		    
+	    def forward(self,x):
+		out1 = self.Conv1(x)
+      	out2 = self.Conv2(out1)
+        	out3 = self.Conv3(out2)
+		out4 = self.Conv4(out3)
+		out5 = self.L1(out4)
+		###### up sampling to create output with the same size
+		out2 = self.upSample1(out2)
+		out3 = self.upSample2(out3)
+		concat_features = torch.cat([out1, out2, out3, out4], 1)
+		return out5, concat_features
+   ```
+   
+
 
 ## Adding custom transformation
 When we want to do a kind of preprocessing that is not implemented in pytorch library, it is axiomatic that preprocessing must be done on loaded images similar to torchvision.Transforms. But there is no function to do what we want. In this regard, we must implement our function in order to do preprocessing in a way that pytorch is going. So, I want to show you implementing a custom trasformation. (Wow, it is an easy job :-). So easy that it can be unbelievable)
