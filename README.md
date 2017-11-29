@@ -193,6 +193,22 @@ This statment returns a tensor with the size of 2\*batch_size*size_of_data. The 
    ```ruby
    (iter(train_target_loader).next())[0]
    ```	 
+ 
+ Now, consider we need to see image data in dataloader. At first, we must pay attention that data are loaded as PIL Image and converted to Tensor. When we need to get data from dataloader (data are loaded and converted to tensor), we must convert data back in dataloader to PIL Image. In this regard, consider the follow code:
+ 
+   ```ruby
+   for inputs,_ in train_loader:
+       inputs = Variable(inputs)       
+   ```	 
+
+Now, data in inputs are tensor because they are loaded in dataloader as batch. It is necessary to write a transformation for converting back the data to PIL Image. For this purpose:
+
+   ```ruby
+    trans = transforms.ToPILImage()
+    img_PIL = trans(inputs[0])
+    img_PIL.show()    #### this line shows the first image in dataloader in a new windows
+   ```	 
+
 
 ## Manipulation a pretrained model
 
