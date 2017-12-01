@@ -437,3 +437,41 @@ for i, (x, y) in enumerate(train_loader):
     
 This ensures that you won’t have double the memory necessary for x and y, because train_loader first allocates the memory, and then assign it to x.
 But note that if your input tensor is relatively small, this saving by doing that is negligible and not worth it (you also need to make sure that all references to x are deleted, that’s why I del output as well).
+
+---------------------------------------------------------------------------------------------------------------------------
+```ruby
+class testNet(nn.Module):
+    def __init__(self):
+        super(testNet, self).__init__()
+        self.rnn = nn.RNN(input_size=200, hidden_size=1000, num_layers=1)
+        self.linear = nn.Linear(1000, 100)
+
+    def forward(self, x, init):
+        x = self.rnn(x, init)[0]
+        y = self.linear(x.view(x.size(0)*x.size(1), x.size(2)))
+        return y.view(x.size(0), x.size(1), y.size(1))
+
+net = testNet()
+init = Variable(torch.zeros(1, 4, 1000))
+criterion = nn.CrossEntropyLoss()
+optimizer = optim.SGD(net.parameters(), lr=0.01, momentum=0.9)
+
+total_loss = 0.0
+for i in range(10000): #10000 mini-batch
+    input = Variable(torch.randn(1000, 4, 200)) #Seqlen = 1000, batch_size = 4, feature = 200
+    target = Variable(torch.LongTensor(4, 1000).zero_())
+
+    optimizer.zero_grad()
+    output = net(input, init)
+    loss = criterion(output.view(-1, output.size(2)), target.view(-1))
+    loss.backward()
+    optimizer.step()
+    total_loss += loss[0]
+
+print(total_loss)
+```
+I expect memory usage not increasing per mini-batch. What might be the problem? (Correct me if my script is wrong)
+
+## Answer
+
+I think I see the problem. You have to remember that loss is a Variable, and indexing Variables, always returns a Variable, even if they're 1D! So when you do total_loss += loss[0] you're actually making total_loss a Variable, and adding more and more subgraphs to its history, making it impossible to free them, because you're still holding a reference. Just replace total_loss += loss[0] with total_loss += loss.data[0] and it should be back to normal.
