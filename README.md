@@ -415,4 +415,25 @@ At first, assume that our transformation is converting  BGR color space in loade
     train_set = datasets.ImageFolder(os.path.join(train_data_dir, 'train'), data_transforms['train']) #train    
     val_set   = datasets.ImageFolder(os.path.join(val_data_dir, 'val'), data_transforms['val'])
    ```
+   
+   
+## A technical description for myself, which I will describe soon
 In the above code transforms.Normalize is commented because when you debug your code, zero values in training images which are loaded as a batch will be unchanged. If the normalization is done, the zero values in image's pixels change.
+
+Variable share the same memory as its underlying Tensor, so there is no memory savings by deleting it afterwards.
+That being said, you can also replace the Tensor variable with a Variable containing the Tensor. E.g.,
+ ```ruby
+
+x = torch.rand(5)
+x = Variable(x)
+The only case where you might see some (small) savings is when you reach the end of the training loop, you might want to delete all references to the input tensor.
+
+for i, (x, y) in enumerate(train_loader):
+    x = Variable(x)
+    y = Variable(y)
+    # compute model and update
+    del x, y, output 
+ ```
+    
+This ensures that you won’t have double the memory necessary for x and y, because train_loader first allocates the memory, and then assign it to x.
+But note that if your input tensor is relatively small, this saving by doing that is negligible and not worth it (you also need to make sure that all references to x are deleted, that’s why I del output as well).
