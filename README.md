@@ -418,6 +418,7 @@ At first, assume that our transformation is converting  BGR color space in loade
    
    
 ## A technical description for myself, which I will describe soon
+------------------------------------ First Problem -----------------------------------------------------------------------
 In the above code transforms.Normalize is commented because when you debug your code, zero values in training images which are loaded as a batch will be unchanged. If the normalization is done, the zero values in image's pixels change.
 
 Variable share the same memory as its underlying Tensor, so there is no memory savings by deleting it afterwards.
@@ -438,7 +439,7 @@ for i, (x, y) in enumerate(train_loader):
 This ensures that you won’t have double the memory necessary for x and y, because train_loader first allocates the memory, and then assign it to x.
 But note that if your input tensor is relatively small, this saving by doing that is negligible and not worth it (you also need to make sure that all references to x are deleted, that’s why I del output as well).
 
----------------------------------------------------------------------------------------------------------------------------
+------------------------------------Second Problem---------------------------------------------------------------------------------------
 ```ruby
 class testNet(nn.Module):
     def __init__(self):
