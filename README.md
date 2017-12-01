@@ -419,6 +419,7 @@ At first, assume that our transformation is converting  BGR color space in loade
    
 ## A technical description for myself, which I will describe soon
 ------------------------------------ First Problem -----------------------------------------------------------------------
+
 In the above code transforms.Normalize is commented because when you debug your code, zero values in training images which are loaded as a batch will be unchanged. If the normalization is done, the zero values in image's pixels change.
 
 Variable share the same memory as its underlying Tensor, so there is no memory savings by deleting it afterwards.
