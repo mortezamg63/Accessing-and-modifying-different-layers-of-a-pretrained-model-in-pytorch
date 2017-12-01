@@ -177,6 +177,13 @@ It is necessary note that all lines in forward function must return FloatTensor 
     criterion = cust_loss()   #nn.CrossEntropyLoss()        
     Optimizer = optim.SGD(filter(lambda p: p.requires_grad, model_conv.parameters()), lr=1e-3, momentum=0.9)
     ...
+    if use_gpu:
+       inputs = Variable(inputs.cuda(), requires_grad=True)
+       labels = Variable(inputs.cuda(), requires_grad=True)
+    else:
+       inputs = Variable(inputs, requires_grad=True)
+       labels = Variable(labels, requires_grad=True)
+       
     loss = criterion(inputs, labels)
     loss.backward()
    ```
