@@ -343,7 +343,7 @@ Also the above calss can be defined as follow:
 I hope this piece of code can be helpful :-)
 
 
-## Get different layers as whole
+## Get different layers as group
 There is not considerable difference with previous section. Here the other way of getting layers are shown.
 
  ```ruby
