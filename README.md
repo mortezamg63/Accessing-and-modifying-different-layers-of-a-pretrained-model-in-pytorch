@@ -477,3 +477,15 @@ I expect memory usage not increasing per mini-batch. What might be the problem? 
 ## Answer
 
 I think I see the problem. You have to remember that loss is a Variable, and indexing Variables, always returns a Variable, even if they're 1D! So when you do total_loss += loss[0] you're actually making total_loss a Variable, and adding more and more subgraphs to its history, making it impossible to free them, because you're still holding a reference. Just replace total_loss += loss[0] with total_loss += loss.data[0] and it should be back to normal.
+
+## Live Updating with Matplotlib
+Assume we have a generator network which is training to generate an image. In training phase, we want to see ability of networking in generating the image after every 500 epochs. In other words, our purpose is showing output image after each 500 epoch in figure using matplotlib library. In this regard, We must consider to update the figure window. For this purpose, we write a method/function and call it in a training loop. The function is as follow:
+
+```ruby
+
+def plot_image(image):        
+    ax1.clear()  
+    plt.imshow(image)
+    plt.draw()
+    plt.pause(.02)    
+```
