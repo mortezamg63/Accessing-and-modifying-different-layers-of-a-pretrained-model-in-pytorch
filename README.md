@@ -64,7 +64,7 @@ child 6 is:
         others are not shown because of consuming less space
 ```
 
-## Freezing parameters of some layers to prevent them from retraining
+## Freezing parameters of some layers to prevent from retraining them
 
 The following code prints parameters for layers in a pretrained model.
 
