@@ -217,7 +217,7 @@ Now, data in inputs are tensor because they are loaded in dataloader as batch. I
    ```	 
 
 
-## Manipulation a pretrained model
+## Manipulating a pretrained model
 
 Sometimes it is needed to extract some features from different layers of a pretrained model in a way that forward function can be run one time. In other words, running forward function in pretrained model and stopping it in a layer whose output is our interest is not a good method. Assume you wants to get output of several layers and you must run forward function several times (ie the number of runs is the number of layers whose output is our interest). To achieve this goal it is needed some background information.
 
@@ -343,7 +343,7 @@ Also the above calss can be defined as follow:
 I hope this piece of code can be helpful :-)
 
 
-## Get different layers as group
+## obtaining different layers as group
 There is not considerable difference with previous section. Here the other way of getting layers are shown.
 
  ```ruby
